@@ -1,0 +1,16 @@
+package com.nl.fos.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.nl.fos.model.Restaurant;
+import com.nl.fos.model.User;
+
+
+
+public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
+
+	Optional<Restaurant> findByUsername(String username);
+    // add custom queries here
+}

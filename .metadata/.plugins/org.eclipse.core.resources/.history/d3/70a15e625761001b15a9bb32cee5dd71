@@ -1,0 +1,56 @@
+package com.nl.fos.service.impl;
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.nl.fos.model.Category;
+import com.nl.fos.model.FoodItem;
+import com.nl.fos.repository.CategoryRepository;
+import com.nl.fos.service.CategoryService;
+
+import java.util.List;
+
+/**
+ * Created By Zhu Lin on 3/10/2018.
+ */
+@Service
+public class CategoryServiceImpl implements CategoryService {
+    @Autowired
+    CategoryRepository categoryRepository;
+
+
+
+    @Override
+    public List<Category> findAll() {
+        List<Category> res = categoryRepository.findAll();
+      //  res.sort(Comparator.comparing(Category::getCategoryType));
+        return res;
+    }
+
+	@Override
+    public Category findById(Long categoryType) {
+        Category res = categoryRepository.findById(categoryType).get();
+        
+        return res;
+    }
+
+
+
+    @Override
+    @Transactional
+    public Category save(Category productCategory) {
+        return categoryRepository.save(productCategory);
+    }
+
+	@Override
+	public List<FoodItem> findAllFoodItems(Long id) {
+		List<FoodItem> res = categoryRepository.findAllByCategoryId(id);
+		return res;
+	}
+
+
+
+}

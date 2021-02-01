@@ -1,0 +1,7 @@
+package com.nl.fos.service;
+
+import com.nl.fos.model.User;
+public interface ProductInOrderService {
+    void update(String itemId, Integer quantity, User user);
+   // ProductInOrder findOne(String itemId, User user);
+}

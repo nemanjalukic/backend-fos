@@ -1,0 +1,5 @@
+package com.nl.fos.repository;
+
+public interface OrderStatusRepository {
+
+}

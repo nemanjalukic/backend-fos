@@ -1,0 +1,11 @@
+package com.nl.fos.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.nl.fos.model.Customer;
+
+public interface CustomerRepository extends JpaRepository<Customer, String> {
+
+	Customer findByUsername(String username);
+    // add custom queries here
+}

@@ -1,0 +1,18 @@
+package com.nl.fos.service;
+
+import java.util.Collection;
+
+import com.nl.fos.model.User;
+import com.nl.fos.vo.request.SignUpRequest;
+
+public interface UserService {
+    User findOne(String username);
+
+    Collection<User> findByRole(String role);
+
+    User save(SignUpRequest user);
+
+    User update(User user);
+    
+    
+}

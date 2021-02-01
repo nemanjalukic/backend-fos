@@ -1,0 +1,119 @@
+package com.nl.fos.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.nl.fos.repository.CustomerRepository;
+import com.nl.fos.repository.RestaurantRepository;
+import com.nl.fos.repository.RoleRepository;
+
+import com.nl.fos.enums.ResultEnum;
+import com.nl.fos.exception.MyException;
+import com.nl.fos.model.ERole;
+import com.nl.fos.model.Restaurant;
+import com.nl.fos.model.Role;
+import com.nl.fos.model.User;
+import com.nl.fos.repository.UserRepository;
+import com.nl.fos.service.UserService;
+import com.nl.fos.vo.request.SignUpRequest;
+
+import java.util.Collection;
+
+/**
+ * Created By Zhu Lin on 3/13/2018.
+ */
+@Service
+@DependsOn("passwordEncoder")
+public class UserServiceImpl implements UserService {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    UserRepository userRepository;
+    
+    @Autowired
+	RoleRepository roleRepository;
+    
+    @Autowired
+	CustomerRepository customerRepository;
+    
+    @Autowired
+    RestaurantRepository restaurantRepository;
+
+    @Override
+    public User findOne(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Collection<User> findByRole(String role) {
+        return userRepository.findAllByRole(role);
+    }
+
+    @Override
+    @Transactional
+    public User save(SignUpRequest signRequest) {
+    	User user=new User(signRequest);
+    	
+    	if(signRequest.getRole().equals(ERole.ROLE_CUSTOMER.name())) {
+    		Role userRole = roleRepository.findByName(ERole.ROLE_CUSTOMER).get();
+        	Restaurant restaurant =new Restaurant(signRequest);
+        	restaurant.setRole(userRole);
+        	restaurant.setPassword(passwordEncoder.encode(user.getPassword()));
+        	
+        	try {
+        		Restaurant savedUser = restaurantRepository.save(restaurant);
+
+                return savedUser;
+
+            } catch (Exception e) {
+                throw new MyException(ResultEnum.VALID_ERROR);
+            }
+    		//user.setRole(userRole);
+    	}
+    	else if(signRequest.getRole().equals(ERole.ROLE_RESTAURANT.name())) {
+    		Role userRole = roleRepository.findByName(ERole.ROLE_RESTAURANT).get();
+        	Customer customer = new C
+        	restaurant.setRole(userRole);
+        	restaurant.setPassword(passwordEncoder.encode(user.getPassword()));
+        	
+        	try {
+        		Restaurant savedUser = restaurantRepository.save(restaurant);
+
+                return savedUser;
+
+            } catch (Exception e) {
+                throw new MyException(ResultEnum.VALID_ERROR);
+            }
+    		//user.setRole(userRole);
+    	}
+    	
+    	/*Role userRole = roleRepository.findByName(ERole.ROLE_USER).get();
+    	user.setRole(userRole);*/
+
+       /* user.setPassword(passwordEncoder.encode(user.getPassword()));
+        try {
+            User savedUser = userRepository.save(user);
+
+            return savedUser;
+
+        } catch (Exception e) {
+            throw new MyException(ResultEnum.VALID_ERROR);
+        }*/
+
+    }
+
+    @Override
+    @Transactional
+    public User update(User user) {
+        User oldUser = userRepository.findByEmail(user.getEmail());
+        oldUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        oldUser.setUsername(user.getUsername());
+        oldUser.setPhone(user.getPhone());
+        oldUser.setAddress(user.getAddress());
+        return userRepository.save(oldUser);
+    }
+
+}

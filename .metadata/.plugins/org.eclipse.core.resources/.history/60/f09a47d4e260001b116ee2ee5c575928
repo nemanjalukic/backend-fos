@@ -1,0 +1,129 @@
+package com.nl.fos.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.nl.fos.model.FoodItem;
+import com.nl.fos.repository.FoodItemRepository;
+import com.nl.fos.service.CategoryService;
+import com.nl.fos.service.FoodItemService;
+
+/**
+ * Created By Zhu Lin on 3/10/2018.
+ */
+@Service
+public class FoodItemServiceImpl implements FoodItemService {
+
+    @Autowired
+    FoodItemRepository foodItemRepository;
+
+    @Autowired
+    CategoryService categoryService;
+
+    @Override
+    public FoodItem findOne(String foodItemId) {
+
+        FoodItem foodItem = foodItemRepository.findById(foodItemId);
+        return foodItem;
+    }
+
+    @Override
+    public Page<FoodItem> findUpAll(Pageable pageable) {
+        return foodItemRepository.findAllByProductStatusOrderByProductIdAsc(ProductStatusEnum.UP.getCode(),pageable);
+    }
+
+    @Override
+    public Page<FoodItem> findAll(Pageable pageable) {
+        return foodItemRepository.findAllByOrderByProductId(pageable);
+    }
+
+    @Override
+    public Page<FoodItem> findAllInCategory(Integer categoryType, Pageable pageable) {
+        return foodItemRepository.findAllByCategoryTypeOrderByProductIdAsc(categoryType, pageable);
+    }
+
+    @Override
+    @Transactional
+    public void increaseStock(String foodItemId, int amount) {
+        FoodItem foodItem = findOne(foodItemId);
+        if (foodItem == null) throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
+
+        int update = foodItem.getProductStock() + amount;
+        foodItem.setProductStock(update);
+        foodItemRepository.save(foodItem);
+    }
+
+    @Override
+    @Transactional
+    public void decreaseStock(String foodItemId, int amount) {
+        FoodItem foodItem = findOne(foodItemId);
+        if (foodItem == null) throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
+
+        int update = foodItem.getProductStock() - amount;
+        if(update <= 0) throw new MyException(ResultEnum.PRODUCT_NOT_ENOUGH );
+
+        foodItem.setProductStock(update);
+        foodItemRepository.save(foodItem);
+    }
+
+    @Override
+    @Transactional
+    public FoodItem offSale(String foodItemId) {
+        FoodItem foodItem = findOne(foodItemId);
+        if (foodItem == null) throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
+
+        if (foodItem.getProductStatus() == ProductStatusEnum.DOWN.getCode()) {
+            throw new MyException(ResultEnum.PRODUCT_STATUS_ERROR);
+        }
+
+        //更新
+        foodItem.setProductStatus(ProductStatusEnum.DOWN.getCode());
+        return foodItemRepository.save(foodItem);
+    }
+
+    @Override
+    @Transactional
+    public FoodItem onSale(String foodItemId) {
+        FoodItem foodItem = findOne(foodItemId);
+        if (foodItem == null) throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
+
+        if (foodItem.getProductStatus() == ProductStatusEnum.UP.getCode()) {
+            throw new MyException(ResultEnum.PRODUCT_STATUS_ERROR);
+        }
+
+        //更新
+        foodItem.setProductStatus(ProductStatusEnum.UP.getCode());
+        return foodItemRepository.save(foodItem);
+    }
+
+    @Override
+    public FoodItem update(FoodItem foodItem) {
+
+        // if null throw exception
+        categoryService.findByCategoryType(foodItem.getCategoryType());
+        if(foodItem.getProductStatus() > 1) {
+            throw new MyException(ResultEnum.PRODUCT_STATUS_ERROR);
+        }
+
+
+        return foodItemRepository.save(foodItem);
+    }
+
+    @Override
+    public FoodItem save(FoodItem foodItem) {
+        return update(foodItem);
+    }
+
+    @Override
+    public void delete(String foodItemId) {
+        FoodItem foodItem = findOne(foodItemId);
+        if (foodItem == null) throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
+        foodItemRepository.delete(foodItem);
+
+    }
+
+
+}

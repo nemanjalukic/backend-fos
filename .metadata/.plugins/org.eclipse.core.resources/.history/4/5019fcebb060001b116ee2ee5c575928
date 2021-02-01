@@ -1,0 +1,10 @@
+package com.nl.fos.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.nl.fos.model.FoodCategory;
+
+
+public interface FoodCategoryRepository extends JpaRepository<FoodCategory, Integer> {
+    // add custom queries here
+}

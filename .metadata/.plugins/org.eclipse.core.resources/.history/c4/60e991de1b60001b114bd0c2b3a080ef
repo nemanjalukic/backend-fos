@@ -1,0 +1,24 @@
+package com.nl.fos.exception;
+
+import com.nl.fos.enums.ResultEnum;
+
+public class MyException extends RuntimeException {
+
+	private static final long serialVersionUID = 6756858341971217384L;
+	private Integer code;
+
+    public MyException(ResultEnum resultEnum) {
+        super(resultEnum.getMessage());
+
+        this.code = resultEnum.getCode();
+    }
+
+    public MyException(Integer code, String message) {
+        super(message);
+        this.code = code;
+    }
+
+	public Integer getCode() {
+		return code;
+	}
+}

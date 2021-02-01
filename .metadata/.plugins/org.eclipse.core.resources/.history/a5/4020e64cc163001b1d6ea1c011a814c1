@@ -1,0 +1,14 @@
+package com.nl.fos.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.nl.fos.repository.CustomerRepository;
+import com.nl.fos.repository.OrderRepository;
+import com.nl.fos.service.CustomerService;
+
+public class CustomerSericeImpl implements CustomerService {
+	
+	@Autowired
+	 CustomerRepository customerRepository;
+
+}

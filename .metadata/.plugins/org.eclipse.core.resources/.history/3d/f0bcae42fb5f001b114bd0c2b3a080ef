@@ -1,0 +1,124 @@
+package io.bootify.my_app.domain;
+
+import javax.persistence.*;
+import java.time.OffsetDateTime;
+
+
+@Entity
+public class User {
+
+    @Id
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(nullable = false, unique = true, length = 16)
+    private String username;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false, length = 32)
+    private String password;
+
+    @Column
+    private OffsetDateTime createTime;
+
+    @Column(nullable = false, length = 45)
+    private String address;
+
+    @Column(nullable = false, length = 45)
+    private String phone;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, optional = false)
+    private Customer user;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, optional = false)
+    private Restaurant user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(final Integer id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(final String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
+    public OffsetDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(final OffsetDateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(final String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(final String phone) {
+        this.phone = phone;
+    }
+
+    public Customer getUser() {
+        return user;
+    }
+
+    public void setUser(final Customer user) {
+        this.user = user;
+    }
+
+    public Restaurant getUser() {
+        return user;
+    }
+
+    public void setUser(final Restaurant user) {
+        this.user = user;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(final Role role) {
+        this.role = role;
+    }
+
+}

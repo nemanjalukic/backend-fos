@@ -1,0 +1,23 @@
+package com.nl.fos.service;
+
+
+
+import java.util.List;
+
+import com.nl.fos.model.FoodCategory;
+
+/**
+ * Created By Zhu Lin on 3/10/2018.
+ */
+public interface CategoryService {
+
+    List<FoodCategory> findAll();
+
+    /*FoodCategory findByCategoryType(Integer categoryType);
+
+    List<FoodCategory> findByCategoryTypeIn(List<Integer> categoryTypeList);
+
+    FoodCategory save(FoodCategory productCategory);*/
+
+
+}

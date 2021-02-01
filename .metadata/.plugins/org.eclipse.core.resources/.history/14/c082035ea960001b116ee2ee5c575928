@@ -1,0 +1,9 @@
+package io.bootify.my_app.repos;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import io.bootify.my_app.domain.Foodcategory;
+
+
+public interface FoodcategoryRepository extends JpaRepository<Foodcategory, Integer> {
+    // add custom queries here
+}

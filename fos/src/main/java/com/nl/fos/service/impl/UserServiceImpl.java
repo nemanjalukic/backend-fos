@@ -1,0 +1,128 @@
+package com.nl.fos.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.nl.fos.repository.CustomerRepository;
+import com.nl.fos.repository.RestaurantRepository;
+import com.nl.fos.repository.RoleRepository;
+
+import com.nl.fos.model.Customer;
+import com.nl.fos.model.ERole;
+import com.nl.fos.model.Restaurant;
+import com.nl.fos.model.Role;
+import com.nl.fos.model.User;
+import com.nl.fos.repository.UserRepository;
+import com.nl.fos.service.UserService;
+import com.nl.fos.vo.request.SignUpRequest;
+import com.nl.fos.vo.response.MessageResponse;
+
+import java.util.Collection;
+
+@Service
+@DependsOn("passwordEncoder")
+public class UserServiceImpl implements UserService {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    UserRepository userRepository;
+    
+    @Autowired
+	RoleRepository roleRepository;
+    
+    @Autowired
+	CustomerRepository customerRepository;
+    
+    @Autowired
+    RestaurantRepository restaurantRepository;
+
+    @Override
+    public User findOne(String email) {
+        return userRepository.findByEmail(email);
+    }
+    
+    @Override
+    public Restaurant findRestaurant(String username) {
+        return restaurantRepository.findByUsername(username).get();
+    }
+    @Override
+    public Customer findCustomer(String username) {
+        return customerRepository.findByUsername(username).get();
+    }
+
+    @Override
+    public Collection<User> findByRole(String role) {
+        return userRepository.findAllByRole(role);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> save(SignUpRequest signRequest) {
+    	
+    	if (userRepository.existsByUsername(signRequest.getUsername())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Username is already taken!"));
+		}
+
+		if (userRepository.existsByEmail(signRequest.getEmail())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Email is already in use!"));
+		}
+
+    	Role userRole;
+    	Restaurant restaurant;
+    	Customer customer;
+    	if(signRequest.getRole().equals(ERole.ROLE_CUSTOMER.name())) {
+    		userRole = roleRepository.findByName(ERole.ROLE_CUSTOMER).get();
+    		customer = new Customer(signRequest);
+    		customer.setRole(userRole);
+    		customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+    		
+    		customerRepository.save(customer);
+    		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    	}
+    	else if(signRequest.getRole().equals(ERole.ROLE_RESTAURANT.name())) {
+    		 userRole = roleRepository.findByName(ERole.ROLE_RESTAURANT).get();
+    		 restaurant = new Restaurant(signRequest);
+    		 restaurant.setRole(userRole);
+    		 restaurant.setPassword(passwordEncoder.encode(restaurant.getPassword()));
+    		 
+    		 restaurantRepository.save(restaurant);
+     		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    	}
+    	else {
+    		return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Cant create user!"));
+    	}
+
+        
+        /*try {
+            User savedUser = userRepository.save(user);
+
+            return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+
+        } catch (Exception e) {
+            throw new MyException(ResultEnum.VALID_ERROR);
+        }*/
+
+    }
+
+    @Override
+    @Transactional
+    public User update(User user) {
+        User oldUser = userRepository.findByEmail(user.getEmail());
+        oldUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        oldUser.setUsername(user.getUsername());
+        oldUser.setPhone(user.getPhone());
+        oldUser.setAddress(user.getAddress());
+        return userRepository.save(oldUser);
+    }
+
+}

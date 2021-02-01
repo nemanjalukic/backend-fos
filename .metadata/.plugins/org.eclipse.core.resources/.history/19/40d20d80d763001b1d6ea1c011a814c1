@@ -1,0 +1,47 @@
+package com.nl.fos.model;
+
+import javax.persistence.*;
+import java.util.Set;
+
+
+@Entity
+public class OrderStatus {
+
+    @Id
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(length = 45)
+    private OStatus status;
+
+    @OneToMany(mappedBy = "orderStatus", targetEntity = Order.class)
+    private Set<Order> orderStatusOrders;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(final String status) {
+        this.status = status;
+    }
+
+    public Set<Order> getOrderStatusOrders() {
+        return orderStatusOrders;
+    }
+
+    public void setOrderStatusOrders(final Set<Order> orderStatusOrders) {
+        this.orderStatusOrders = orderStatusOrders;
+    }
+
+}

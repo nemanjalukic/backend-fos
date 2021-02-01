@@ -1,0 +1,49 @@
+package com.nl.fos.model;
+
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Set;
+
+
+@Entity
+public class FoodCategory {
+
+    @Id
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 45)
+    private String category;
+    @JsonIgnore
+    @OneToMany(mappedBy = "foodCategory", targetEntity = FoodItem.class)
+    private Set<FoodItem> foodCategoryFooditems;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(final String category) {
+        this.category = category;
+    }
+
+    public Set<FoodItem> getFoodCategoryFooditems() {
+        return foodCategoryFooditems;
+    }
+
+    public void setFoodCategoryFooditems(final Set<FoodItem> foodCategoryFooditems) {
+        this.foodCategoryFooditems = foodCategoryFooditems;
+    }
+
+}

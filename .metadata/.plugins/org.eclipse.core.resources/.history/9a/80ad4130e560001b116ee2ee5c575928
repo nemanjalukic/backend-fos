@@ -1,0 +1,62 @@
+package com.nl.fos.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.nl.fos.model.FoodItem;
+import com.nl.fos.repository.FoodItemRepository;
+import com.nl.fos.service.CategoryService;
+import com.nl.fos.service.FoodItemService;
+
+/**
+ * Created By Zhu Lin on 3/10/2018.
+ */
+@Service
+public class FoodItemServiceImpl implements FoodItemService {
+
+    @Autowired
+    FoodItemRepository foodItemRepository;
+
+    @Autowired
+    CategoryService categoryService;
+
+
+
+    @Override
+    public Page<FoodItem> findAll(Pageable pageable) {
+        return foodItemRepository.findAllByOrderByProductId(pageable);
+    }
+
+    @Override
+    public Page<FoodItem> findAllInCategory(Integer categoryType, Pageable pageable) {
+        return foodItemRepository.findAllByCategoryTypeOrderByProductIdAsc(categoryType, pageable);
+    }
+
+    
+    @Override
+    public FoodItem update(FoodItem foodItem) {
+        return foodItemRepository.save(foodItem);
+    }
+
+    @Override
+    public FoodItem save(FoodItem foodItem) {
+        return update(foodItem);
+    }
+
+    @Override
+    public void delete(String foodItemId) {
+        FoodItem foodItem = foodItemRepository.findByFoodItemId(foodItemId);
+        foodItemRepository.delete(foodItem);
+
+    }
+
+	@Override
+	public FoodItem findOne(Long id) {
+		foodItemRepository.findByFoodItemId(id.toString())
+	}
+
+
+}

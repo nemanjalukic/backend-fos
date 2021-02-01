@@ -1,0 +1,21 @@
+package com.nl.fos.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.nl.fos.model.Order;
+import com.nl.fos.repository.OrderRepository;
+import com.nl.fos.service.OrderService;
+
+public class OrderServiceImpl implements OrderService{
+	
+	 @Autowired
+	 OrderRepository orderRepository;
+	 
+	 @Override
+	 @Transactional
+	 public Order save(Order order) {
+	        return orderRepository.save(order);
+	    }
+
+}

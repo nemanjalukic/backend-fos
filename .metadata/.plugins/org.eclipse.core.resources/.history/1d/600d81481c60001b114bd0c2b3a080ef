@@ -1,0 +1,94 @@
+package com.nl.fos.api;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+
+import com.nl.fos.model.User;
+import com.nl.fos.security.jwt.JwtUtils;
+import com.nl.fos.security.services.UserDetailsImpl;
+import com.nl.fos.service.UserService;
+import com.nl.fos.vo.request.LoginForm;
+import com.nl.fos.vo.response.JwtResponse;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+
+@CrossOrigin
+@RestController
+@RequestMapping("/api/")
+public class UserController {
+
+    @Autowired
+    UserService userService;
+
+
+	@Autowired
+	JwtUtils jwtUtils;
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
+
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwt = jwtUtils.generateJwtToken(authentication);
+		
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
+		List<String> roles = userDetails.getAuthorities().stream()
+				.map(item -> item.getAuthority())
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(new JwtResponse(jwt, 
+												 userDetails.getId(), 
+												 userDetails.getUsername(), 
+												 userDetails.getEmail(), 
+												 roles));
+	}
+
+
+    @PostMapping("/register")
+    public ResponseEntity<User> save(@RequestBody User user) {
+        try {
+            return ResponseEntity.ok(userService.save(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<User> update(@RequestBody User user, Principal principal) {
+
+        try {
+            if (!principal.getName().equals(user.getEmail())) throw new IllegalArgumentException();
+            return ResponseEntity.ok(userService.update(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/profile/{email}")
+    public ResponseEntity<User> getProfile(@PathVariable("email") String email, Principal principal) {
+        if (principal.getName().equals(email)) {
+            return ResponseEntity.ok(userService.findOne(email));
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+}

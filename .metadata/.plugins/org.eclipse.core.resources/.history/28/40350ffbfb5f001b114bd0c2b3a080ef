@@ -1,0 +1,101 @@
+package com.nl.fos.model;
+
+import javax.persistence.*;
+
+import io.bootify.my_app.domain.JoinColumn;
+import io.bootify.my_app.domain.ManyToOne;
+import io.bootify.my_app.domain.Restaurant;
+
+import java.time.OffsetDateTime;
+import java.util.Set;
+
+
+@Entity
+public class Order {
+
+    @Id
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
+    private OffsetDateTime orderTime;
+
+    @Column
+    private Double finalPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_status_id", nullable = false)
+    private OrderStatus orderStatus;
+
+    @OneToMany(mappedBy = "order", targetEntity = OrderItem.class)
+    private Set<OrderItem> orderOrderitems;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    private Restaurant restaurant;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public OffsetDateTime getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(final OffsetDateTime orderTime) {
+        this.orderTime = orderTime;
+    }
+
+    public Double getFinalPrice() {
+        return finalPrice;
+    }
+
+    public void setFinalPrice(final Double finalPrice) {
+        this.finalPrice = finalPrice;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(final Customer customer) {
+        this.customer = customer;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(final OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public Set<OrderItem> getOrderOrderitems() {
+        return orderOrderitems;
+    }
+
+    public void setOrderOrderitems(final Set<OrderItem> orderOrderitems) {
+        this.orderOrderitems = orderOrderitems;
+    }
+
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
+	}
+    
+    
+
+}

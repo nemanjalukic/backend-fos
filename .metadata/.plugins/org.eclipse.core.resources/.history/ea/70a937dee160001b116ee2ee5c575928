@@ -1,0 +1,126 @@
+package com.nl.fos.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.nl.fos.service.FoodItemService;
+
+/**
+ * Created By Zhu Lin on 3/10/2018.
+ */
+@Service
+public class FoodItemServiceImpl implements FoodItemService {
+
+    @Autowired
+    FoodItemRepository FoodItemRepository;
+
+    @Autowired
+    CategoryService categoryService;
+
+    @Override
+    public FoodItem findOne(String productId) {
+
+        FoodItem FoodItem = FoodItemRepository.findByProductId(productId);
+        return FoodItem;
+    }
+
+    @Override
+    public Page<FoodItem> findUpAll(Pageable pageable) {
+        return FoodItemRepository.findAllByProductStatusOrderByProductIdAsc(ProductStatusEnum.UP.getCode(),pageable);
+    }
+
+    @Override
+    public Page<FoodItem> findAll(Pageable pageable) {
+        return FoodItemRepository.findAllByOrderByProductId(pageable);
+    }
+
+    @Override
+    public Page<FoodItem> findAllInCategory(Integer categoryType, Pageable pageable) {
+        return FoodItemRepository.findAllByCategoryTypeOrderByProductIdAsc(categoryType, pageable);
+    }
+
+    @Override
+    @Transactional
+    public void increaseStock(String productId, int amount) {
+        FoodItem FoodItem = findOne(productId);
+        if (FoodItem == null) throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
+
+        int update = FoodItem.getProductStock() + amount;
+        FoodItem.setProductStock(update);
+        FoodItemRepository.save(FoodItem);
+    }
+
+    @Override
+    @Transactional
+    public void decreaseStock(String productId, int amount) {
+        FoodItem FoodItem = findOne(productId);
+        if (FoodItem == null) throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
+
+        int update = FoodItem.getProductStock() - amount;
+        if(update <= 0) throw new MyException(ResultEnum.PRODUCT_NOT_ENOUGH );
+
+        FoodItem.setProductStock(update);
+        FoodItemRepository.save(FoodItem);
+    }
+
+    @Override
+    @Transactional
+    public FoodItem offSale(String productId) {
+        FoodItem FoodItem = findOne(productId);
+        if (FoodItem == null) throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
+
+        if (FoodItem.getProductStatus() == ProductStatusEnum.DOWN.getCode()) {
+            throw new MyException(ResultEnum.PRODUCT_STATUS_ERROR);
+        }
+
+        //更新
+        FoodItem.setProductStatus(ProductStatusEnum.DOWN.getCode());
+        return FoodItemRepository.save(FoodItem);
+    }
+
+    @Override
+    @Transactional
+    public FoodItem onSale(String productId) {
+        FoodItem FoodItem = findOne(productId);
+        if (FoodItem == null) throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
+
+        if (FoodItem.getProductStatus() == ProductStatusEnum.UP.getCode()) {
+            throw new MyException(ResultEnum.PRODUCT_STATUS_ERROR);
+        }
+
+        //更新
+        FoodItem.setProductStatus(ProductStatusEnum.UP.getCode());
+        return FoodItemRepository.save(FoodItem);
+    }
+
+    @Override
+    public FoodItem update(FoodItem FoodItem) {
+
+        // if null throw exception
+        categoryService.findByCategoryType(FoodItem.getCategoryType());
+        if(FoodItem.getProductStatus() > 1) {
+            throw new MyException(ResultEnum.PRODUCT_STATUS_ERROR);
+        }
+
+
+        return FoodItemRepository.save(FoodItem);
+    }
+
+    @Override
+    public FoodItem save(FoodItem FoodItem) {
+        return update(FoodItem);
+    }
+
+    @Override
+    public void delete(String productId) {
+        FoodItem FoodItem = findOne(productId);
+        if (FoodItem == null) throw new MyException(ResultEnum.PRODUCT_NOT_EXIST);
+        FoodItemRepository.delete(FoodItem);
+
+    }
+
+
+}

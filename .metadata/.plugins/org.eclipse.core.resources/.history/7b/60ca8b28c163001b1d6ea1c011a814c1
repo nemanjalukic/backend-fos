@@ -1,0 +1,7 @@
+package com.nl.fos.service.impl;
+
+import com.nl.fos.service.CustomerService;
+
+public class CustomerSericeImpl implements CustomerService {
+
+}

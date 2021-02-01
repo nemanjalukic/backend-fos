@@ -1,0 +1,47 @@
+package com.nl.fos.model;
+
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.*;
+
+import io.bootify.my_app.domain.Fooditem;
+import io.bootify.my_app.domain.OneToMany;
+
+
+@Entity
+public class Category {
+
+    @Id
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 45)
+    private String category;
+    
+    @OneToMany(mappedBy = "category", targetEntity = Fooditem.class)
+    private Set<FoodItem> categoryFooditems;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(final String category) {
+        this.category = category;
+    }
+
+
+    
+    
+
+}

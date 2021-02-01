@@ -1,0 +1,28 @@
+package com.nl.fos.service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.nl.fos.model.FoodItem;
+
+/**
+ * Created By Zhu Lin on 3/10/2018.
+ */
+public interface FoodItemService {
+
+    FoodItem findOne(int foodItemId);
+
+    // All products
+    Page<FoodItem> findAll(Pageable pageable);
+    // All products in a category
+    Page<FoodItem> findAllInCategory(Integer categoryType, Pageable pageable);
+
+    // increase stock
+
+    FoodItem update(FoodItem FoodItem);
+    FoodItem save(FoodItem FoodItem);
+
+    void delete(String productId);
+
+
+}

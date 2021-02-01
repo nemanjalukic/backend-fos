@@ -1,0 +1,9 @@
+package io.bootify.my_app.repos;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import io.bootify.my_app.domain.Order;
+
+
+public interface OrderRepository extends JpaRepository<Order, Integer> {
+    // add custom queries here
+}

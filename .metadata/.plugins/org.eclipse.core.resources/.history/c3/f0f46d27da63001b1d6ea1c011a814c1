@@ -1,0 +1,7 @@
+package com.nl.fos.service.impl;
+
+import com.nl.fos.service.RestaurantService;
+
+public class RestaurantServiceImpl implements RestaurantService{
+
+}

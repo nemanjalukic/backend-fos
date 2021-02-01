@@ -1,0 +1,48 @@
+package com.nl.fos.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.*;
+
+import com.nl.fos.model.Category;
+import com.nl.fos.model.FoodItem;
+import com.nl.fos.repository.CategoryRepository;
+import com.nl.fos.repository.FoodItemRepository;
+import com.nl.fos.service.CategoryService;
+import com.nl.fos.service.FoodItemService;
+import com.nl.fos.vo.response.CategoryPage;
+
+@RestController
+@CrossOrigin
+public class CategoryController {
+
+	@Autowired
+    CategoryService categoryService;
+    @Autowired
+    FoodItemService productService;
+
+
+    /**
+     * Show FoodItems in foodCategory
+     *
+     * @param categoryType
+     * @param page
+     * @param size
+     * @return
+     */
+    @GetMapping("/category/{type}")
+    public CategoryPage showOne(@PathVariable("type") Long categoryType,
+                                @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                @RequestParam(value = "size", defaultValue = "3") Integer size) {
+
+    	Category cat = categoryService.findById(categoryType);
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<FoodItem> foodItems = productService.findAllInCategory(categoryType, request);
+        var tmp = new CategoryPage("", productInCategory);
+        tmp.setCategory(cat.getCategoryName());
+        return tmp;
+    }
+    
+    
+}

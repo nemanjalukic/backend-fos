@@ -1,0 +1,26 @@
+1611148921081	Delete element
+1611154514844	Delete element
+1611168344476	Delete element
+1611168361810	Delete element
+1611168377788	Rename package 'com.nl.fos.model.model'
+1611235572345	Delete element
+1611236493208	Rename package 'com.bezkoder.springjwt.repository'
+1611238507443	Rename package 'com.bezkoder.springjwt.controllers'
+1611238534590	Rename package 'com.bezkoder.springjwt.security.services'
+1611238598254	Delete element
+1611239273505	Rename package 'com.bezkoder.springjwt.security.services'
+1611239312297	Rename package 'com.bezkoder.springjwt.security.jwt'
+1611239368319	Rename package 'com.bezkoder.springjwt.security'
+1611239386205	Rename package 'com.bezkoder.springjwt.payload.response'
+1611239400683	Rename package 'com.bezkoder.springjwt.payload.request'
+1611246543280	Rename type 'Fooditem'
+1611252385603	Delete elements
+1611253411049	Delete element
+1611267519925	Delete element
+1611269469452	Rename type 'Orderitem'
+1611269495342	Rename type 'Orderstatus'
+1611269507270	Rename type 'Foodcategory'
+1611269519112	Rename type 'Fooditem'
+1611269537562	Copy compilation units
+1611269554264	Delete element
+1611323288114	Delete element

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy package &apos;io.bootify.my_app.domain&apos; to &apos;fos/src/main/java&apos;&#x0D;&#x0A;- Original project: &apos;my-app&apos;&#x0D;&#x0A;- Destination element: &apos;fos/src/main/java&apos;&#x0D;&#x0A;- Original element: &apos;my-app/src/main/java/io.bootify.my_app.domain&apos;" description="Copy package" destination="=fos/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/" element1="/src\/main\/java&lt;io.bootify.my_app.domain" flags="589830" fragments="1" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyPackages" stamp="1611267498674" version="1.0"/>
+</session>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;JwtUtils.java&apos; to &apos;fos/src/main/java/com.nl.fos.security.JWT&apos;&#x0D;&#x0A;- Original project: &apos;spring-boot-server&apos;&#x0D;&#x0A;- Destination element: &apos;fos/src/main/java/com.nl.fos.security.JWT&apos;&#x0D;&#x0A;- Original element: &apos;com.bezkoder.springjwt.security.jwt.JwtUtils.java&apos;" description="Copy compilation unit" destination="=fos/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.nl.fos.security.JWT" element1="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.bezkoder.springjwt.security.jwt{JwtUtils.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1612052019981" units="1" version="1.0"/>
+</session>

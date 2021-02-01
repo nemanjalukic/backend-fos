@@ -1,0 +1,10 @@
+package com.nl.fos.service;
+
+import com.nl.fos.model.Order;
+
+@Service
+public interface OrderService {
+
+	Order save(Order order);
+
+}

@@ -1,0 +1,9 @@
+package com.nl.fos.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import io.bootify.my_app.domain.Orderitem;
+
+
+public interface OrderitemRepository extends JpaRepository<Orderitem, Integer> {
+    // add custom queries here
+}

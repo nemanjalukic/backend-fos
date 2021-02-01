@@ -1,0 +1,73 @@
+package com.nl.fos.model;
+
+import javax.persistence.*;
+
+import com.nl.fos.vo.request.SignUpRequest;
+
+import java.util.Set;
+
+
+@Entity
+public class Customer extends User{
+
+	/*@Id
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;*/
+    @Column(nullable = false, updatable = false, length = 45)
+    private String firstName;
+
+    @Column(length = 45)
+    private String lastName;
+
+    /*@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;*/
+
+    @OneToMany(mappedBy = "customer", targetEntity = Order.class)
+    private Set<Order> customerOrders;
+
+    public Customer(SignUpRequest signUpRequest) {
+		super(signUpRequest);
+		this.firstName=signUpRequest.getFirstName();
+		this.lastName=signUpRequest.getLastName();
+	}
+
+	public Customer(String username, String email, String password) {
+		super(username, email, password);
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(final String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(final String lastName) {
+        this.lastName = lastName;
+    }
+
+    /*public User getUser() {
+        return user;
+    }
+
+    public void setUser(final User user) {
+        this.user = user;
+    }*/
+
+    public Set<Order> getCustomerOrders() {
+        return customerOrders;
+    }
+
+    public void setCustomerOrders(final Set<Order> customerOrders) {
+        this.customerOrders = customerOrders;
+    }
+
+}
